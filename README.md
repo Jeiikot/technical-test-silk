@@ -6,7 +6,7 @@ REST API for Colombian consumer credit management. Built with Flask, SQLAlchemy,
 
 - **Python 3.12** · **Flask 3.0** · **SQLAlchemy** · **Alembic** · **PostgreSQL 16**
 - **uv** for dependency management · **ruff** for linting/formatting · **pre-commit** hooks
-- **Marshmallow** for request validation · **python-json-logger** for CloudWatch-compatible structured logs
+- **Marshmallow** for request validation
 - **pytest** for unit and integration tests · **Docker Compose** for local development
 
 ## Quick Start
