@@ -125,12 +125,15 @@ Total pagado: ~$22.694.298 COP
 
 ```
 Saldo en mora = $10.593.361,36
-Tasa mora = 2% × 1.5 = 3% mensual
+Tasa mora sin tope = 2% × 1.5 = 3% mensual
+Tasa usura mensual = (1 + 0.2762)^(1/12) - 1 = 2.076% mensual
 
-Interés moratorio = 10.593.361,36 × (0.03/30) × 15 = $158.900,42 COP
+3% > 2.076% → se aplica el tope: tasa mora = 2.076% mensual
+
+Interés moratorio = 10.593.361,36 × (0.02076/30) × 15 = $110.071,40 COP
 ```
 
-Total a pagar: $1.891.195,03 + $158.900,42 = **$2.050.095,45**
+Total a pagar: $1.891.195,03 + $110.071,40 = **$2.001.266,43**
 
 ### Asientos contables PUC
 

@@ -96,6 +96,10 @@ def upgrade():
         sa.UniqueConstraint("loan_id", "installment_num", name="uq_loan_installment"),
     )
     op.create_index("idx_amort_loan", "amortization_schedule", ["loan_id"])
+    op.create_index(
+        "idx_amort_unpaid_due", "amortization_schedule", ["due_date"],
+        postgresql_where="NOT is_paid",
+    )
 
     op.create_table(
         "payments",

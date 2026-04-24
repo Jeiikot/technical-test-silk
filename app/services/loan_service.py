@@ -52,7 +52,8 @@ def _apply_payment_to_installments(loan: Loan, applied_amount: Decimal, payment_
 
 
 def validate_client_eligibility(
-    client: Client, requested_amount: Decimal, declared_income: Decimal | None, usury_rate_ea: Decimal
+    client: Client, requested_amount: Decimal, declared_income: Decimal | None,
+    rate: Decimal, rate_type: str, term_months: int,
 ) -> None:
     if client.credit_score is None or client.credit_score <= 600:
         raise ClientNotEligibleError("Credit score must be greater than 600.")
@@ -69,8 +70,8 @@ def validate_client_eligibility(
 
     if income_for_capacity is not None:
         max_installment = income_for_capacity * DEBT_CAPACITY_RATIO
-        monthly_rate = fin.convert_rate_to_monthly(usury_rate_ea, "EFECTIVA_ANUAL")
-        estimated_installment = fin.calculate_fixed_installment(requested_amount, monthly_rate, 12)
+        monthly_rate = fin.convert_rate_to_monthly(rate, rate_type)
+        estimated_installment = fin.calculate_fixed_installment(requested_amount, monthly_rate, term_months)
         if estimated_installment > max_installment:
             raise ClientNotEligibleError(
                 f"Requested amount exceeds debt capacity. Max installment: {max_installment:,.2f} COP."
@@ -99,7 +100,7 @@ def create_loan(data: dict, usury_rate_ea: Decimal) -> Loan:
     declared_income = (
         Decimal(str(data["declared_income"])) if data.get("declared_income") is not None else None
     )
-    validate_client_eligibility(client, requested_amount, declared_income, usury_rate_ea)
+    validate_client_eligibility(client, requested_amount, declared_income, rate, rate_type, term)
 
     monthly_rate = fin.convert_rate_to_monthly(rate, rate_type)
     disbursement_date = date.today()

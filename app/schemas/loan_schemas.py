@@ -14,13 +14,13 @@ class SimulateLoanSchema(Schema):
     payment_modality = fields.Str(required=True, validate=validate.OneOf(VALID_MODALITIES))
 
     @validates("amount")
-    def validate_amount(self, value):
+    def validate_amount(self, value, **kwargs):
         from decimal import Decimal
         if Decimal(str(value)) <= 0:
             raise ValidationError("Amount must be greater than zero.")
 
     @validates("interest_rate")
-    def validate_rate(self, value):
+    def validate_rate(self, value, **kwargs):
         from decimal import Decimal
         r = Decimal(str(value))
         if r <= 0 or r >= 1:
@@ -39,7 +39,7 @@ class RegisterPaymentSchema(Schema):
     payment_method = fields.Str(required=True, validate=validate.OneOf(VALID_PAYMENT_METHODS))
 
     @validates("amount")
-    def validate_amount(self, value):
+    def validate_amount(self, value, **kwargs):
         from decimal import Decimal
         if Decimal(str(value)) <= 0:
             raise ValidationError("Payment amount must be greater than zero.")
