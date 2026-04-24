@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rombo
+      POSTGRES_PASSWORD: rombo
+      POSTGRES_DB: rombo_creditos
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rombo -d rombo_creditos"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db_test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rombo
+      POSTGRES_PASSWORD: rombo
+      POSTGRES_DB: rombo_creditos_test
+    ports:
+      - "5433:5432"
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://rombo:rombo@db:5432/rombo_creditos
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: gunicorn -w 4 -b 0.0.0.0:5000 wsgi:app
+
+volumes:
+  pgdata:
