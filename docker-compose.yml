@@ -4,15 +4,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: rombo
-      POSTGRES_PASSWORD: rombo
-      POSTGRES_DB: rombo_creditos
+      POSTGRES_USER: ${POSTGRES_USER:-rombo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rombo}
+      POSTGRES_DB: ${POSTGRES_DB:-rombo_creditos}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rombo -d rombo_creditos"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rombo} -d ${POSTGRES_DB:-rombo_creditos}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,8 +20,8 @@ services:
   db_test:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: rombo
-      POSTGRES_PASSWORD: rombo
+      POSTGRES_USER: ${POSTGRES_USER:-rombo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rombo}
       POSTGRES_DB: rombo_creditos_test
     ports:
       - "5433:5432"
@@ -30,7 +30,7 @@ services:
     build: .
     env_file: .env
     environment:
-      DATABASE_URL: postgresql://rombo:rombo@db:5432/rombo_creditos
+      DATABASE_URL: postgresql://${POSTGRES_USER:-rombo}:${POSTGRES_PASSWORD:-rombo}@db:5432/${POSTGRES_DB:-rombo_creditos}
     ports:
       - "5000:5000"
     depends_on:
